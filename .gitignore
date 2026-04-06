@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Poetry / virtualenv
+.venv/
+dist/
+*.egg-info/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
