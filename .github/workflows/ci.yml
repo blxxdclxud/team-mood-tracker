@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  quality:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check formatting (black)
+        run: poetry run black --check src/
+
+      - name: Lint (ruff)
+        run: poetry run ruff check src/
+
+      - name: Type checking (mypy)
+        run: poetry run mypy src/
+
+      - name: Security - code (bandit)
+        run: poetry run bandit -r src/ -lll
+
+      - name: Security - dependencies (pip-audit)
+        # PYSEC-2022-42969: py ReDoS - transitive dep of interrogate, no fix published
+        run: poetry run pip-audit --ignore-vuln PYSEC-2022-42969
+
+      - name: Docstrings (interrogate)
+        run: poetry run interrogate -vv src/ --fail-under=100
+
+      - name: Cyclomatic complexity (radon)
+        run: poetry run radon cc -a -s src/ --min=F
+
+      - name: Unit tests + coverage
+        run: poetry run pytest --cov=src --cov-fail-under=80
