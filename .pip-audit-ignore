@@ -1,0 +1,4 @@
+# PYSEC-2022-42969: ReDoS in the `py` package's path module.
+# `py` is a transitive dependency of `interrogate` (no fix version published).
+# The vulnerability affects only Windows path handling and does not affect our code.
+PYSEC-2022-42969
